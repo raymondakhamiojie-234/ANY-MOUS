@@ -79,6 +79,19 @@ export async function POST(req: Request) {
     return response;
   } catch (error: any) {
     console.error("Register error:", error);
+
+    // Handle Prisma unique constraint violation (P2002)
+    if (error?.code === "P2002") {
+      const target = error?.meta?.target;
+      if (Array.isArray(target) && target.includes("username")) {
+        return NextResponse.json({ error: "Username is already taken." }, { status: 409 });
+      }
+      if (Array.isArray(target) && target.includes("email")) {
+        return NextResponse.json({ error: "Email is already registered." }, { status: 409 });
+      }
+      return NextResponse.json({ error: "Username or email is already registered." }, { status: 409 });
+    }
+
     return NextResponse.json(
       { error: error?.message || "Failed to create account" },
       { status: 500 }
