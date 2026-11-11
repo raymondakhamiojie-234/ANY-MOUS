@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String               @id @default(cuid())
+  username                  String               @unique
+  email                     String               @unique
+  passwordHash              String
+  promptText                String               @default("Send me an anonymous message!")
+  isAcceptingMessages       Boolean              @default(true)
+  blockedWords              String?              @default("")
+  paystackCustomerId        String?
+  paystackSubscriptionCode  String?
+  isPro                     Boolean              @default(false)
+  proExpiresAt              DateTime?
+  createdAt                 DateTime             @default(now())
+  updatedAt                 DateTime             @updatedAt
+  messages                  Message[]
+  blockedSenders            BlockedSender[]
+  passwordResetTokens       PasswordResetToken[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  recipientId    String
+  recipient      User     @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  content        String
+  senderHash     String
+  senderLocation String?
+  senderDevice   String?
+  senderNetwork  String?
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([recipientId])
+  @@index([recipientId, senderHash])
+}
+
+model BlockedSender {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  senderHash String
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, senderHash])
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
