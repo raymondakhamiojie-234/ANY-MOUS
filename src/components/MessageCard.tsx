@@ -59,7 +59,7 @@ export function MessageCard({
   const formatTimeAgo = (dateInput: string | Date) => {
     const date = new Date(dateInput);
     const now = new Date();
-    const diffSecs = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const diffSecs = Math.max(0, Math.floor((now.getTime() - date.getTime()) / 1000));
 
     if (diffSecs < 60) return "Just now";
     const diffMins = Math.floor(diffSecs / 60);
@@ -68,7 +68,8 @@ export function MessageCard({
     if (diffHours < 24) return `${diffHours}h ago`;
     const diffDays = Math.floor(diffHours / 24);
     if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${months[date.getMonth()]} ${date.getDate()}`;
   };
 
   const handleRead = async () => {
@@ -154,7 +155,10 @@ export function MessageCard({
               </span>
             )}
 
-            <span className="flex items-center gap-1 text-[11px] text-slate-400">
+            <span
+              suppressHydrationWarning
+              className="flex items-center gap-1 text-[11px] text-slate-400"
+            >
               <Clock className="w-3 h-3 text-slate-500" />
               {formatTimeAgo(message.createdAt)}
             </span>

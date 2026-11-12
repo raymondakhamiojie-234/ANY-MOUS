@@ -49,6 +49,15 @@ export function DashboardClient({
   const [messages, setMessages] = useState<MessageItem[]>(initialMessages);
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
 
+  // Profile URL state for hydration safety
+  const [profileUrl, setProfileUrl] = useState<string>(`/u/${initialUser.username}`);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setProfileUrl(`${window.location.origin}/u/${user.username}`);
+    }
+  }, [user.username]);
+
   // Pro State
   const [showProModal, setShowProModal] = useState(false);
 
@@ -279,10 +288,11 @@ export function DashboardClient({
             <Sparkles className="w-3 h-3" />
             Your Secret Link
           </span>
-          <div className="bg-slate-900/90 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 truncate border border-white/5 select-all">
-            {typeof window !== "undefined"
-              ? `${window.location.origin}/u/${user.username}`
-              : `http://localhost:3000/u/${user.username}`}
+          <div
+            suppressHydrationWarning
+            className="bg-slate-900/90 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 truncate border border-white/5 select-all"
+          >
+            {profileUrl}
           </div>
           <CopyLinkButton username={user.username} />
         </div>
