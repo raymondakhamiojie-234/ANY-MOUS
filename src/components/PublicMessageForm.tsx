@@ -21,7 +21,7 @@ export function PublicMessageForm({
   const [sending, setSending] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const maxLength = 500;
+  const maxLength = 1500;
 
   const triggerConfetti = () => {
     try {

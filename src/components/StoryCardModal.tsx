@@ -70,7 +70,7 @@ export function StoryCardModal({
           </div>
 
           {/* Anonymous Content Bubble */}
-          <div className="relative z-10 my-4 bg-white text-slate-900 rounded-2xl p-5 shadow-xl border border-white/20 text-center flex items-center justify-center min-h-[110px]">
+          <div className="relative z-10 my-4 bg-white text-slate-900 rounded-2xl p-5 shadow-xl border border-white/20 text-center flex items-center justify-center min-h-[110px] max-h-[220px] overflow-y-auto">
             <p className="text-base font-bold leading-relaxed break-words">
               {messageContent}
             </p>

@@ -227,7 +227,7 @@ export function ReplyShareModal({
 
           {/* Middle: Anonymous Question Bubble */}
           <div className="relative z-10 my-auto flex flex-col gap-3">
-            <div className="bg-white text-slate-900 rounded-2xl p-4 shadow-xl border border-white/40 text-center relative">
+            <div className="bg-white text-slate-900 rounded-2xl p-4 shadow-xl border border-white/40 text-center relative max-h-[220px] overflow-y-auto">
               <span className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-500 text-white shadow-sm">
                 Anonymous Q&A
               </span>

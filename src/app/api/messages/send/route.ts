@@ -24,9 +24,9 @@ export async function POST(req: Request) {
       );
     }
 
-    if (trimmedContent.length > 500) {
+    if (trimmedContent.length > 1500) {
       return NextResponse.json(
-        { error: "Message exceeds 500 characters limit." },
+        { error: "Message exceeds 1,500 characters limit." },
         { status: 400 }
       );
     }
