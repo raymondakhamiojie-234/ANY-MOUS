@@ -54,6 +54,38 @@ const QUICK_REPLIES = [
   "DM me on Instagram to confess! ✨",
 ];
 
+function getMessageBubbleStyles(textLength: number) {
+  if (textLength <= 100) {
+    return {
+      fontSize: "text-sm sm:text-base font-extrabold leading-relaxed",
+      padding: "p-4 sm:p-5",
+    };
+  }
+  if (textLength <= 250) {
+    return {
+      fontSize: "text-xs sm:text-sm font-bold leading-relaxed",
+      padding: "p-3.5 sm:p-4",
+    };
+  }
+  if (textLength <= 500) {
+    return {
+      fontSize: "text-[11px] sm:text-xs font-semibold leading-relaxed",
+      padding: "p-3",
+    };
+  }
+  if (textLength <= 900) {
+    return {
+      fontSize: "text-[10px] sm:text-[11px] font-semibold leading-normal",
+      padding: "p-2.5 sm:p-3",
+    };
+  }
+  // 901 - 1500 chars
+  return {
+    fontSize: "text-[9.5px] sm:text-[10px] font-medium leading-snug tracking-tight",
+    padding: "p-2 sm:p-2.5",
+  };
+}
+
 export function ReplyShareModal({
   isOpen,
   onClose,
@@ -67,6 +99,9 @@ export function ReplyShareModal({
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const bubbleStyles = getMessageBubbleStyles(messageContent.length);
+  const isLongMessage = messageContent.length > 300;
 
   if (!isOpen) return null;
 
@@ -205,8 +240,9 @@ export function ReplyShareModal({
         <div
           ref={cardRef}
           id="reply-story-card"
-          className={`w-[290px] h-[515px] sm:w-[315px] sm:h-[560px] rounded-3xl p-5 shadow-2xl relative overflow-hidden flex flex-col justify-between select-none ${THEME_CLASSES[theme].bg}`}
-          style={{ aspectRatio: "9/16" }}
+          className={`w-[295px] sm:w-[330px] min-h-[520px] sm:min-h-[570px] h-auto rounded-3xl ${
+            isLongMessage ? "p-3.5 sm:p-4" : "p-4 sm:p-5"
+          } shadow-2xl relative flex flex-col justify-between gap-3 select-none ${THEME_CLASSES[theme].bg}`}
         >
           {/* Subtle background glow bubbles */}
           <div className="absolute -top-16 -right-16 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none" />
@@ -227,17 +263,17 @@ export function ReplyShareModal({
 
           {/* Middle: Anonymous Question Bubble */}
           <div className="relative z-10 my-auto flex flex-col gap-3">
-            <div className="bg-white text-slate-900 rounded-2xl p-4 shadow-xl border border-white/40 text-center relative max-h-[220px] overflow-y-auto">
+            <div className={`bg-white text-slate-900 rounded-2xl ${bubbleStyles.padding} shadow-xl border border-white/40 text-center relative`}>
               <span className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-500 text-white shadow-sm">
                 Anonymous Q&A
               </span>
-              <p className="text-sm sm:text-base font-extrabold leading-relaxed text-slate-900 break-words mt-1">
+              <p className={`${bubbleStyles.fontSize} text-slate-900 break-words mt-1`}>
                 &quot;{messageContent}&quot;
               </p>
             </div>
 
             {/* User's Reply Bubble */}
-            <div className="bg-slate-950/80 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl text-left">
+            <div className="bg-slate-950/80 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl text-left shrink-0">
               <div className="flex items-center gap-1.5 mb-1 text-[10px] font-black uppercase tracking-wider text-pink-400">
                 <MessageCircle className="w-3 h-3" />
                 <span>@{username}&apos;s Reply</span>

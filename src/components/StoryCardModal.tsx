@@ -11,6 +11,37 @@ interface StoryCardModalProps {
   promptText: string;
 }
 
+function getStoryBubbleStyles(textLength: number) {
+  if (textLength <= 100) {
+    return {
+      fontSize: "text-base font-bold leading-relaxed",
+      padding: "p-5",
+    };
+  }
+  if (textLength <= 250) {
+    return {
+      fontSize: "text-sm font-bold leading-relaxed",
+      padding: "p-4",
+    };
+  }
+  if (textLength <= 600) {
+    return {
+      fontSize: "text-xs font-semibold leading-relaxed",
+      padding: "p-3.5",
+    };
+  }
+  if (textLength <= 1000) {
+    return {
+      fontSize: "text-[11px] font-medium leading-normal",
+      padding: "p-3",
+    };
+  }
+  return {
+    fontSize: "text-[10px] font-medium leading-snug tracking-tight",
+    padding: "p-2.5",
+  };
+}
+
 export function StoryCardModal({
   isOpen,
   onClose,
@@ -21,6 +52,8 @@ export function StoryCardModal({
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
+
+  const bubbleStyles = getStoryBubbleStyles(messageContent.length);
 
   const handleCopyText = async () => {
     try {
@@ -50,7 +83,7 @@ export function StoryCardModal({
         {/* NGL Style Story Card Preview */}
         <div
           id="story-card"
-          className="w-full rounded-3xl p-6 bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[340px]"
+          className="w-full rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700 text-white shadow-2xl relative flex flex-col justify-between min-h-[340px] h-auto"
         >
           {/* Subtle decorative circles */}
           <div className="absolute -top-12 -right-12 w-36 h-36 bg-white/15 rounded-full blur-xl pointer-events-none" />
@@ -70,8 +103,8 @@ export function StoryCardModal({
           </div>
 
           {/* Anonymous Content Bubble */}
-          <div className="relative z-10 my-4 bg-white text-slate-900 rounded-2xl p-5 shadow-xl border border-white/20 text-center flex items-center justify-center min-h-[110px] max-h-[220px] overflow-y-auto">
-            <p className="text-base font-bold leading-relaxed break-words">
+          <div className={`relative z-10 my-4 bg-white text-slate-900 rounded-2xl ${bubbleStyles.padding} shadow-xl border border-white/20 text-center flex items-center justify-center min-h-[100px]`}>
+            <p className={`${bubbleStyles.fontSize} text-slate-900 break-words`}>
               {messageContent}
             </p>
           </div>
